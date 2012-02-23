@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!-- 2012/02/22 -->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CSS Color Palette Extractor</title>
+    <style type="text/css">
+    body {
+        background-color: #FFF; 
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        padding: 4em;
+    }
+    h1, h2 {
+        font-weight: normal;
+    }
+    button {
+        font-size: 1.5em;
+    }
+    textarea {
+        width: 99%;
+        height: 10em;
+    }
+    .color {
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,.1);
+        height: 60px;
+        cursor: pointer;
+    }
+        .color em {
+            font-size: .8em;
+            font-style: normal;
+            position: absolute;
+            top: -100em;
+            margin-top: -2em;
+            padding: .2em;
+            background: rgba(255,255,255,.7);
+        }
+    .color:hover {
+        -moz-transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+        -o-transform: scale(1.5); 
+        -ms-transform: scale(1.5));
+        transform: scale(1.5);
+        -webkit-transition: all 0.1s ease-in;
+        -moz-transition: all 0.1s ease-in;
+    }
+        .color:hover em {
+            top: auto;
+        }
+    br {
+        display: none;
+    }
+    footer,
+    footer a {
+        color: #777;
+    }
+    </style>
+</head>
+<body>
+<h1>CSS Color Palette extractor</h1>
+<textarea id="source" placeholder="Paste your CSS code here"></textarea><br>
+<button onclick="extract()">Extract colors</button>
+<h2>Greyscale</h2>
+<div id="bw">-</div>
+<h2>Colors</h2>
+<div id="colors">-</div>
+
+<footer>
+<p>Hint: Copy/paste the bars to get raw values.</p>
+<p>Created by <a href="http://twitter.com/mauriz">@mauriz</a>. Includes code from <a href="http://glazman.org/JSCSSP/">glazman.org/JSCSSP</a> &amp; <a href="https://github.com/brehaut/color-js">github.com/brehaut/color-js</a></p>
+</footer>
+
+<script type="text/javascript" src="js/cssParser.js"></script>
+<script type="text/javascript" src="js/color.js"></script>
+<script type="text/javascript" src="js/palette.js"></script>
+<script type="text/javascript">
+function display(collection, parent) {
+    var out = [];
+    var size = 10;
+    for (var i=0,l=collection.length; i<l; i++) {
+        size = (Math.min(50, collection[i].count) * 2) + "px";
+        out.push("<span class='color' style='background:"+collection[i].original+"; width:"+size+"' title='"+collection[i].original+' : '+collection[i].count+"'><em>"+collection[i].original+"</em> </span>")
+    }
+    parent.innerHTML = out.join("");
+}
+
+function extract() {
+    var cssText = document.getElementById("source").value;
+    Palette.init(cssText);
+    console.log(Palette.colors);
+    console.log(Palette.bw);
+    
+    display(Palette.bw, document.getElementById("bw"));
+    display(Palette.colors, document.getElementById("colors"));
+}
+</script>
+</body>
+</html>
